@@ -8,27 +8,25 @@ function SignIn() {
     password: "",
   });
   const navigate = useNavigate("/dashboard");
+
   const handleLogin = async (formData) => {
     try {
-      const response = await axiosInstance.post("/auth/login", {
-        ...formData, 
-        role: "user"
-      });
-      const {accessToken, refreshToken, email, role} = response.data;
+      const response = await axiosInstance.post("/auth/login", { ...formData, role: "user" });
+      const { accessToken, refreshToken, email, role } = response.data;
 
       localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("RefreshToken", refreshToken);
+      localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("userEmail", email);
       localStorage.setItem("userRole", role);
 
-      console.log("Logged in", response.data);
       alert("Login successful!");
-      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
     } catch (error) {
       alert("Invalid credentials. Please try again.");
-      console.error("Login Error ", error.response?.data);
+      console.error("Login Error:", error);
     }
-  }
+  };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupForm() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -11,28 +13,22 @@ export default function SignupForm() {
         pinCode: "",
     });
     const handleRegister = async (formData) => {
-        try {
-            const response = await axiosInstance.post("/auth/register", {
-                ...formData,
-                role: "user",
-                stationName:"pithalpur"
-            });
+    
+  try {
+    await axiosInstance.post("/auth/register", {
+      ...formData,
+      role: "user",
+      // add any required extra fields here, e.g. stationName
+    });
 
-            alert("Registration successful!");
-            console.log("Registered", response.data);
-        } catch (error) {
-            if (error.response) {
-                // Backend error (400, 500, etc.)
-                console.error("Register Error:", error.response.data);
-            } else if (error.request) {
-                // Request made but no response
-                console.error("Register Error: No response from server", error.request);
-            } else {
-                // Other error (e.g., network issue, code bug)
-                console.error("Register Error:", error.message);
-            }
-        }
-    }
+    alert("Registration successful! Please sign in.");
+    navigate("/signin");
+  } catch (error) {
+    console.error("Register Error:", error);
+    alert(error?.response?.data?.message || "Registration failed.");
+  }
+};
+
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };

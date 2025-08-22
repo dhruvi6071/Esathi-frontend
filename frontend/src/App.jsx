@@ -17,7 +17,7 @@ function App() {
         <Route path="/" element={<HeroSection />} />
 
         {/* protected routes */}
-        <Route path="/dashboard" element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="bills" element={<Bills />} />
