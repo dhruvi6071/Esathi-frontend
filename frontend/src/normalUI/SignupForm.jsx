@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function SignupForm() {
     const [formData, setFormData] = useState({
@@ -7,21 +8,52 @@ export default function SignupForm() {
         email: "",
         password: "",
         confirmPassword: "",
-        pincode: "",
+        pinCode: "",
     });
+    const handleRegister = async (formData) => {
+        try {
+            const response = await axiosInstance.post("/auth/register", {
+                ...formData,
+                role: "user",
+                stationName:"pithalpur"
+            });
 
+            alert("Registration successful!");
+            console.log("Registered", response.data);
+        } catch (error) {
+            if (error.response) {
+                // Backend error (400, 500, etc.)
+                console.error("Register Error:", error.response.data);
+            } else if (error.request) {
+                // Request made but no response
+                console.error("Register Error: No response from server", error.request);
+            } else {
+                // Other error (e.g., network issue, code bug)
+                console.error("Register Error:", error.message);
+            }
+        }
+    }
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (formData.password !== formData.confirmPassword) {
+            alert("Password do not match");
+            return;
+        }
+
+        handleRegister(formData);
         console.log("Form Submitted:", formData);
     };
 
     const handleGoogleSignIn = () => {
         alert("Google Sign-In Clicked");
     };
+
+
 
     return (
         <form
